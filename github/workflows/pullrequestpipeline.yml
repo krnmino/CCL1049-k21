@@ -1,0 +1,37 @@
+name : Canalización de solicitud de extracción de ServiceNow
+
+en : 
+   pull_request :
+     sucursales :
+      - maestro
+     
+trabajos :
+   compilación :
+   # El propósito de este trabajo es ejecutar ATF en la rama actual 
+    nombre : Ejecutar ATF en la instancia 
+    de desarrollo se ejecuta en : ubuntu-latest
+
+    pasos :
+
+      - nombre : ServiceNow CI/CD Aplicar cambios 
+        utiliza : ServiceNow/sncicd-apply-changes@1.2.1 
+        env :
+           snowUsername : ${{ secrets.NOW_USERNAME }} 
+          snowPassword : ${{ secrets.NOW_PASSWORD }} 
+          snowSourceInstance : ${{ secrets .NOW_DEV_INSTANCE }} 
+          appSysID : ${{ secretos.APP_SYS_ID }}
+
+      - nombre : ejecutar pruebas 
+        id : atf_test_dev 
+        uses : ServiceNow/sncicd-tests-run@1.0.0 
+        with :
+           browserName :
+           browserVersion :
+           osName :
+           osVersion :
+           testSuiteSysId : ${{ secrets.TEST_SUITE_ID }} 
+          testSuiteName :
+         env :
+           snowUsername : ${{ secretos.NOW_USERNAME }} 
+          snowPassword : ${{ secrets.NOW_PASSWORD }} 
+          snowInstallInstance :${{ secretos.NOW_DEV_INSTANCE }}
